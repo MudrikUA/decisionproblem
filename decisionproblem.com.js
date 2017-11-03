@@ -25,6 +25,7 @@ var InvestmentIsDeposit = false;
 var depositCount = 0;
 var withdrawTime = new Date();
 
+//autobuy params
 var autoBuyAutoClippers = false;
 var autoBuyMarketing = false;
 var autoBuyMegaClippers = false;
@@ -43,12 +44,12 @@ setInterval(function() { //paperclips price balanced
 
     if (avgClipsCreatePS > 999) { //infinity num
         if (avgClipsSoldPS < (avgClipsCreatePS + (avgClipsCreatePS / 100 * percentDif))) {
-        //if (tempUnsoldClips < unsoldClips - avgClipsCreatePS/15) {
+            //if (tempUnsoldClips < unsoldClips - avgClipsCreatePS/15) {
             if ($('#btnLowerPrice').attr("disabled") !== 'disabled') {
                 $('#btnLowerPrice').click();
             }
-            } else if (avgClipsSoldPS > (avgClipsCreatePS - (avgClipsCreatePS / 100 * percentDif))) {
-        //} else if (tempUnsoldClips > unsoldClips - avgClipsCreatePS/15) {
+        } else if (avgClipsSoldPS > (avgClipsCreatePS - (avgClipsCreatePS / 100 * percentDif))) {
+            //} else if (tempUnsoldClips > unsoldClips - avgClipsCreatePS/15) {
             if ($('#btnRaisePrice').attr("disabled") !== 'disabled') {
                 $('#btnRaisePrice').click();
             }
@@ -74,7 +75,7 @@ setInterval(function() { //some action perform
     updateAllStatusInformation();
     manualClipsCreate();
 
-}, 1000 / creationSpeed);
+}, 1000);
 
 setInterval(function() { //any buy
     updateAllStatusInformation();
@@ -89,8 +90,10 @@ setInterval(function() { //any buy
     }
 }, 500);
 
-setInterval(function() { //projects perform
+setInterval(function() { //projects perform , earn yomi and lvl Up Investments Engine
     selectAnyProjects();
+    yomiEarn();
+    lvlUpInvestmentsEngine();
 }, 3000);
 
 setInterval(function() { //Investments
@@ -132,7 +135,7 @@ function buyAllOthers() {
 }
 
 function manualClipsCreate() {
-    if ((avgClipsCreatePS < creationSpeed + 100) && wireLength > 0) {
+    if ((avgClipsCreatePS < creationSpeed + 1000) && wireLength > 0) {
         if ($('#btnMakePaperclip').attr("disabled") !== 'disabled') {
             //$('#btnMakePaperclip').click(); //create clips
             clipClick(wireLength);
@@ -149,9 +152,15 @@ function selectAnyProjects() {
     var memoryValue = parseInt($('#memory').text().replace(/\s+/g, ""))
     if (trustCount > 0) {
         if (processorsValue > memoryValue || processorsValue == memoryValue) {
-            addMem();
+            if ($('#btnAddMem').attr("disabled") !== 'disabled') {
+                $('#btnAddMem').click(); //create clips
+            }
+            //addMem();
         } else {
-            addProc();
+            if ($(btnAddProc).attr("disabled") !== 'disabled') {
+                $('#btnAddProc').click(); //create clips
+            }
+            //addProc();
         }
     }
     projList.each(function() {
@@ -171,15 +180,43 @@ function investmentPerform() {
             investDeposit();
             depositCount = parseInt($('#investmentBankroll').text().split(',')[0].replace(/\s+/g, '')) + 1;
             InvestmentIsDeposit = true;
-            console.log('  Deposit  ' + depositCount);
+            console.log('%c  Deposit  ' + depositCount + '<'+new Date().toLocaleString()+'> ', consoleLogStyleRed);
         } else {
             var tempDepositCount = parseInt($('#investmentBankroll').text().split(',')[0].replace(/\s+/g, '')) + 1;
             if (tempDepositCount - depositCount > (depositCount / 100 * depositPercent)) {
                 investWithdraw();
                 InvestmentIsDeposit = false;
-                console.log('  Withdraw ' + depositCount + '--' + tempDepositCount);
+                console.log('%c  Withdraw ' + depositCount + '--' + tempDepositCount + '<'+new Date().toLocaleString()+'> ', consoleLogStyleGreen);
                 withdrawTime = new Date();
             }
         }
     }
 }
+
+function yomiEarn() {
+    if ($('#btnNewTournament').attr("disabled") !== 'disabled') {
+        $('#btnNewTournament').click(); //statrt turn
+    }
+    if ($('#btnRunTournament').attr("disabled") !== 'disabled') {
+        $('#btnRunTournament').click(); //run
+    }
+}
+
+function lvlUpInvestmentsEngine() {
+    if ($('#btnImproveInvestments').attr("disabled") !== 'disabled') {
+        $('#btnImproveInvestments').click(); //run
+    }
+}
+
+var consoleLogStyleGreen = [
+    'background: linear-gradient(#05d21d, #008710)',
+    'color: #ffffff',
+    'border: 1px solid #3E0E02',
+    'line-height: 20px'
+].join(';');
+var consoleLogStyleRed = [
+    'background: linear-gradient(#D33106, #571402)',
+    'color: #ffffff',
+    'border: 1px solid #3E0E02',
+    'line-height: 20px'
+].join(';');
