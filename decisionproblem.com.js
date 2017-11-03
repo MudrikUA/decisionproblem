@@ -180,13 +180,15 @@ function investmentPerform() {
             investDeposit();
             depositCount = parseInt($('#investmentBankroll').text().split(',')[0].replace(/\s+/g, '')) + 1;
             InvestmentIsDeposit = true;
-            console.log('%c  Deposit  ' + depositCount + '<'+new Date().toLocaleString()+'> ', consoleLogStyleRed);
+            console.log('%c  Deposit  ' + depositCount + '  <' + new Date().toLocaleString() + '> ', consoleLogStyleRed);
         } else {
             var tempDepositCount = parseInt($('#investmentBankroll').text().split(',')[0].replace(/\s+/g, '')) + 1;
-            if (tempDepositCount - depositCount > (depositCount / 100 * depositPercent)) {
+            if (tempDepositCount - depositCount > (bigNumberFormatingForPrint(depositCount.toString()) / 100 * depositPercent)) {
                 investWithdraw();
                 InvestmentIsDeposit = false;
-                console.log('%c  Withdraw ' + depositCount + '--' + tempDepositCount + '<'+new Date().toLocaleString()+'> ', consoleLogStyleGreen);
+                console.log('%c  Withdraw ' + bigNumberFormatingForPrint(depositCount.toString()) + '--' 
+                    + bigNumberFormatingForPrint(tempDepositCount.toString()) 
+                    + '   <' + new Date().toLocaleString() + '> ', consoleLogStyleGreen);
                 withdrawTime = new Date();
             }
         }
@@ -220,3 +222,17 @@ var consoleLogStyleRed = [
     'border: 1px solid #3E0E02',
     'line-height: 20px'
 ].join(';');
+
+function bigNumberFormatingForPrint(number) {
+    var cArr = number.split('')
+    var result = '';
+    var pos = 0;
+    for (i = 0; i < cArr.length; i++) {
+        pos++;
+        if ((pos) % 3 == 0) {
+            result += ' ';
+        }
+        result += cArr[i]
+    }
+    return result;
+}
